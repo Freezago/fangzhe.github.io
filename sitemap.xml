@@ -46,14 +46,14 @@
 
   
   <url>
-    <loc>http://yoursite.com/tags/SAR/</loc>
+    <loc>http://yoursite.com/tags/qgis/</loc>
     <lastmod>2020-09-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>http://yoursite.com/tags/qgis/</loc>
+    <loc>http://yoursite.com/tags/SAR/</loc>
     <lastmod>2020-09-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>

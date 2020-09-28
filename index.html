@@ -352,75 +352,16 @@
       
         
           
-            <p>Open SAR Toolkit(OST)是一个用于Sentinel-1数据预处理的Python包，支持Sentinel-1分析就绪数据(Analysis Ready Data, ARD)的自动生成。OST最初由联合国粮食及农业组织（FAO）开发，现在由ESA负责。</p>
-<h1 id="安装依赖项"><a href="#安装依赖项" class="headerlink" title="安装依赖项"></a>安装依赖项</h1><h2 id="安装配置SNAP"><a href="#安装配置SNAP" class="headerlink" title="安装配置SNAP"></a>安装配置SNAP</h2><p>SNAP是OST的依赖软件。首先在<a href="http://step.esa.int/main/download/snap-download/" target="_blank" rel="noopener">此处</a>下载安装包并安装SNAP。</p>
-<h2 id="配置SNAP-python环境（可选）"><a href="#配置SNAP-python环境（可选）" class="headerlink" title="配置SNAP python环境（可选）"></a>配置SNAP python环境（可选）</h2><p>SNAP本身也是提供Python接口的。关于SNAP支持的Python版本。<a href="https://senbox.atlassian.net/wiki/spaces/SNAP/pages/19300362/How+to+use+the+SNAP+API+from+Python" target="_blank" rel="noopener">SNAP wiki</a>的说法是2.7和3.3~3.6，但SNAP安装时的提示Only Python versions 2.7, 3.3 and 3.4 are supported。<br>OST支持的的Python版本为&gt;=3.5。</p>
-<p>考虑到以后可能会用到SNAP Python接口，暂且采用SNAP wiki的说法，在conda创建了python 3.6环境用来配置SNAP和OST。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda create -n py36 python=3.6</span><br><span class="line">conda activate py36</span><br></pre></td></tr></table></figure>
-<p>安装过程参考<a href="https://senbox.atlassian.net/wiki/spaces/SNAP/pages/50855941/Configure+Python+to+use+the+SNAP-Python+snappy+interface" target="_blank" rel="noopener">SNAP wiki</a>。</p>
-<p>安装过程中没有检查到python环境，所以没有选择。安装完成后再手动配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap/bin/snappy-conf &lt;python-exe&gt;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>如果不知道自己的python解释器位置<python-exe>，通过<code>where python</code>（Window）或<code>which python</code>（Linux）查看</python-exe></p>
-</blockquote>
-<p>因此对我来说，该命令为</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh snappy-conf /home/fangzhe/anaconda3/envs/py36/bin/python3.6</span><br></pre></td></tr></table></figure>
-<p>配置完毕后的信息：</p>
-<blockquote>
-<p>/home/fangzhe/snap/bin/../platform/lib/nbexec: WARNING: environment variable DISPLAY is not set<br>Configuring SNAP-Python interface…<br>Done. The SNAP-Python interface is located in ‘/home/fangzhe/.snap/snap-python/snappy’<br>When using SNAP from Python, either do: sys.path.append(‘/home/fangzhe/.snap/snap-python’)<br>or copy the ‘snappy’ module into your Python’s ‘site-packages’ directory.</p>
-</blockquote>
-<p>根据该消息，手动将’/home/fangzhe/.snap/snap-python/snappy’复制到/home/fangzhe/anaconda3/envs/py36/lib/python3.6/site-packages</p>
-<p>测试可用。</p>
-<h2 id="安装Orfeo-Toolbox（可选）"><a href="#安装Orfeo-Toolbox（可选）" class="headerlink" title="安装Orfeo Toolbox（可选）"></a>安装Orfeo Toolbox（可选）</h2><p>OST的影像镶嵌功能依赖于Orfeo Toolbox的otbcli_Mosaic命令，因此如果想使用镶嵌功能需要下载安装<a href="https://www.orfeo-toolbox.org/download/" target="_blank" rel="noopener">Orfeo Toolbox</a>。</p>
-<p>安装后确保安装目录下的bin目录设置到了PATH环境变量。</p>
-<h1 id="安装OST"><a href="#安装OST" class="headerlink" title="安装OST"></a>安装OST</h1><p>方法：通过conda安装</p>
-<p>首先安装依赖包<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">conda install pip gdal jupyter jupyterlab git matplotlib numpy rasterio imageio rtree geopandas fiona shapely matplotlib descartes tqdm scipy joblib retrying pytest pytest-cov nodejs</span><br><span class="line"></span><br><span class="line"># this is needed for the progress bar when downloading</span><br><span class="line">jupyter labextension install @jupyter-widgets/jupyterlab-manager</span><br><span class="line">jupyter nbextension enable --py widgetsnbextension</span><br></pre></td></tr></table></figure></p>
-<p>然后安装OST<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install git+https://github.com/ESA-PhiLab/OpenSarToolkit.git</span><br></pre></td></tr></table></figure></p>
-<h3 id="未解决：Windows下使用报错"><a href="#未解决：Windows下使用报错" class="headerlink" title="未解决：Windows下使用报错"></a>未解决：Windows下使用报错</h3><p>注意OST是依赖snap的，需要提供 SNAP gpt命令行exe文件路径(e.g. C:\path\to\snap\bin\gpt.exe)</p>
-<h1 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h1><p>OST没有提供文档，代码也基本没有注释，学习时主要参考ESA提供的一份<a href="https://github.com/ESA-PhiLab/OST_Notebooks" target="_blank" rel="noopener">Jupyter notebook教程</a>。不过该教程版本较老，很多类和函数的名字和参数有所变动，需要查看源码自行订正。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> ost <span class="keyword">import</span> Sentinel1Scene</span><br><span class="line"></span><br><span class="line">scene_id = <span class="string">'S1A_IW_GRDH_1SDV_20191116T170638_20191116T170703_029939_036AAB_070F'</span></span><br><span class="line"><span class="comment"># create an S1Scene instance</span></span><br><span class="line">s1 = Sentinel1Scene(scene_id)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看数据基本信息</span></span><br><span class="line">print(s1.info())</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据下载（需要输入NASA Earthdata的账号和密码）</span></span><br><span class="line">output_dir = <span class="string">'your path'</span></span><br><span class="line">s1.download(output_dir)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 数据预处理</span></span><br><span class="line">s1.create_ard(infile, output_dir)</span><br></pre></td></tr></table></figure>
-<h1 id="讨论"><a href="#讨论" class="headerlink" title="讨论"></a>讨论</h1><h2 id="OST做了哪些预处理工作"><a href="#OST做了哪些预处理工作" class="headerlink" title="OST做了哪些预处理工作"></a>OST做了哪些预处理工作</h2><p>Sentinel1Scene.create_ard()函数可实现Analysis Ready Data(ARD)的自动生成（仅支持GRD产品，不支持SLC产品），通过追踪源码，可知主要由grd_to_ard.grd_to_ard(filelist, config_file)实现，具体包括以下步骤：</p>
-<ol>
-<li>导入数据, 关键函数为<code>grd_wrappers.grd_frame_import()</code>，用于更新轨道信息(orbit information)，移除热噪声(thermal noise)。</li>
-<li>移除边缘噪声(border noise), if ard[‘remove_border_noise’] and not subset</li>
-<li>辐射校正calibration, </li>
-<li>多视(multi-look)，if int(ard[‘resolution’]) &gt;= 20,默认执行。多视处理的目的是为了抑制斑点噪声，但同时会降低分辨率。</li>
-<li>Layover shadow mask(if ard[‘create_ls_mask’] is True，默认false)实际调用命令 Snap graph for Layover/Shadow mask creation 这是啥？？？</li>
-<li>Speckle filtering（if ard[‘remove_speckle’]，默认不做，猜测是因为多视处理已经做了噪声抑制</li>
-<li>Terrain flattening(if ard[‘product_type’] == ‘RTC-gamma0’，该参数默认为GTC-gamma0)</li>
-</ol>
-<h2 id="OST是怎么确定执行哪些步骤的"><a href="#OST是怎么确定执行哪些步骤的" class="headerlink" title="OST是怎么确定执行哪些步骤的"></a>OST是怎么确定执行哪些步骤的</h2><p>OST定义了几种不同类型的分析就绪数据，分别为CEOS, Earth-Engine, OST-GTC, OST-RTC（jupyter notebook上讲的过期了），其中OST-GTC是默认类型。</p>
-<p>生成ARD过程中所依据的处理参数来自processing.json，由Sentinel1Scene.get_ard_parameters()函数生成：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_ard_parameters</span><span class="params">(self, ard_type)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># find respective template for selected ARD type</span></span><br><span class="line">    template_file = OST_ROOT.joinpath(</span><br><span class="line">        <span class="string">f"graphs/ard_json/"</span></span><br><span class="line">        <span class="string">f"<span class="subst">&#123;self.product_type.lower()&#125;</span>."</span></span><br><span class="line">        <span class="string">f"<span class="subst">&#123;ard_type.replace(<span class="string">'-'</span>, <span class="string">'_'</span>).lower()&#125;</span>.json"</span></span><br><span class="line">    )</span><br><span class="line">    <span class="comment"># open and load parameters</span></span><br><span class="line">    <span class="keyword">with</span> open(template_file, <span class="string">'r'</span>) <span class="keyword">as</span> ard_file:</span><br><span class="line">        self.ard_parameters = json.load(ard_file)[<span class="string">'processing'</span>]</span><br></pre></td></tr></table></figure></p>
-<p>由get_ard_parameters()可知，配置参数的模板文件位于 ost根目录/grahps/ard_json，打开该路径，可以发现一共有7个模板文件：</p>
-<ul>
-<li>grd.ceos.json</li>
-<li>grd.earth_engine.json</li>
-<li>grd.ost_gtc.json</li>
-<li>grd.ost_rtc.json</li>
-<li>slc.ost_gtc.json</li>
-<li>slc.ost_minimal.json</li>
-<li>slc.ost_rtc.json</li>
-</ul>
-<p>很明显，前4个模板分别对应4种产品类型。</p>
-<p>打开比较一下有何不同，</p>
-<p>Earth-Engine: <code>&quot;resolution&quot;: 10,&quot;product_type&quot;: &quot;GTC-sigma0&quot;</code></p>
-<p>CEOS: <code>&quot;resolution&quot;: 10,&quot;product_type&quot;: &quot;RTC-gamma0&quot;,&quot;create_ls_mask&quot;: true</code></p>
-<p>OST-RTC: <code>&quot;product_type&quot;: &quot;RTC-gamma0&quot;, &quot;create_ls_mask&quot;: true,</code></p>
-<p>Earth-Engine的分辨率是OST-GTC的2倍，最后的数据体积也是OST-GTC的2倍。Earth-Engine的结果特别奇怪，处理的一个数据结果分布基本是(-0.5, 0.5)但尾巴特别长，总体数据范围为(-120, 11067)。不知道是数据的问题还是这种产品都是这样的。</p>
-<p>附上OST-GTC的参数文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;processing&quot;: &#123;</span><br><span class="line">        &quot;single_ARD&quot;: &#123;</span><br><span class="line">            &quot;image_type&quot;: &quot;GRD&quot;,</span><br><span class="line">            &quot;ard_type&quot;: &quot;OST-GTC&quot;,</span><br><span class="line">            &quot;resolution&quot;: 20,</span><br><span class="line">            &quot;remove_border_noise&quot;: true,</span><br><span class="line">            &quot;product_type&quot;: &quot;GTC-gamma0&quot;,</span><br><span class="line">            &quot;polarisation&quot;: &quot;VV, VH, HH, HV&quot;,</span><br><span class="line">            &quot;to_db&quot;: false,</span><br><span class="line">            &quot;to_tif&quot;: false,</span><br><span class="line">            &quot;geocoding&quot;: &quot;terrain&quot;,</span><br><span class="line">            &quot;remove_speckle&quot;: false,</span><br><span class="line">            &quot;speckle_filter&quot;: &#123;</span><br><span class="line">                &quot;filter&quot;: &quot;Refined Lee&quot;,</span><br><span class="line">                &quot;ENL&quot;: 1,</span><br><span class="line">                &quot;estimate_ENL&quot;: true,</span><br><span class="line">                &quot;sigma&quot;: 0.9,</span><br><span class="line">                &quot;filter_x_size&quot;: 3,</span><br><span class="line">                &quot;filter_y_size&quot;: 3,</span><br><span class="line">                &quot;window_size&quot;: &quot;7x7&quot;,</span><br><span class="line">                &quot;target_window_size&quot;: &quot;3x3&quot;,</span><br><span class="line">                &quot;num_of_looks&quot;: 1,</span><br><span class="line">                &quot;damping&quot;: 2,</span><br><span class="line">                &quot;pan_size&quot;: 50</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;create_ls_mask&quot;: false,</span><br><span class="line">            &quot;apply_ls_mask&quot;: false,</span><br><span class="line">            &quot;dem&quot;: &#123;</span><br><span class="line">                &quot;dem_name&quot;: &quot;SRTM 1Sec HGT&quot;,</span><br><span class="line">                &quot;dem_file&quot;: &quot;&quot;,</span><br><span class="line">                &quot;dem_nodata&quot;: 0,</span><br><span class="line">                &quot;dem_resampling&quot;: &quot;BILINEAR_INTERPOLATION&quot;,</span><br><span class="line">                &quot;image_resampling&quot;: &quot;BICUBIC_INTERPOLATION&quot;,</span><br><span class="line">                &quot;egm_correction&quot;: false,</span><br><span class="line">                &quot;out_projection&quot;: 4326</span><br><span class="line">            &#125; </span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;time-series_ARD&quot;: &#123;</span><br><span class="line">            &quot;to_db&quot;: true,</span><br><span class="line">            &quot;remove_mt_speckle&quot;: true,</span><br><span class="line">            &quot;apply_ls_mask&quot;: false,</span><br><span class="line">            &quot;mt_speckle_filter&quot;: &#123;</span><br><span class="line">                &quot;filter&quot;: &quot;Refined Lee&quot;,</span><br><span class="line">                &quot;ENL&quot;: 1,</span><br><span class="line">                &quot;estimate_ENL&quot;: true,</span><br><span class="line">                &quot;sigma&quot;: 0.9,</span><br><span class="line">                &quot;filter_x_size&quot;: 3,</span><br><span class="line">                &quot;filter_y_size&quot;: 3,</span><br><span class="line">                &quot;window_size&quot;: &quot;7x7&quot;,</span><br><span class="line">                &quot;target_window_size&quot;: &quot;3x3&quot;,</span><br><span class="line">                &quot;num_of_looks&quot;: 1,</span><br><span class="line">                &quot;damping&quot;: 2,</span><br><span class="line">                &quot;pan_size&quot;: 50</span><br><span class="line">            &#125;,</span><br><span class="line">            &quot;apply_ls_mask&quot;: false,</span><br><span class="line">            &quot;deseasonalize&quot;: false,</span><br><span class="line">            &quot;dtype_output&quot;: &quot;float32&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;time-scan_ARD&quot;: &#123;</span><br><span class="line">            &quot;metrics&quot;: [&quot;avg&quot;, &quot;max&quot;, &quot;min&quot;, &quot;std&quot;, &quot;cov&quot;],</span><br><span class="line">            &quot;remove_outliers&quot;: true,</span><br><span class="line">            &quot;apply_ls_mask&quot;: false</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;mosaic&quot;: &#123;</span><br><span class="line">            &quot;harmonization&quot;: true,</span><br><span class="line">            &quot;production&quot;: false,</span><br><span class="line">            &quot;cut_to_aoi&quot;: true</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h2 id="输出数据的格式"><a href="#输出数据的格式" class="headerlink" title="输出数据的格式"></a>输出数据的格式</h2><p>处理结果为SNAP推荐的BEAM-DIMAP格式，记录了地理编码、文件占用、尺寸、成像日期、传感器类型等元数据，该格式的具体说明摸<a href="https://www.brockmann-consult.de/beam-wiki/display/BEAM/BEAM-DIMAP+Format" target="_blank" rel="noopener">这里</a>。SNAP称其是唯一一种正确存储所有元数据的格式。如果将其导出为Geotiff等格式，会丢失很多信息。</p>
-<p>SNAP的建议是，尽量使用BEAM DIMAP格式，只有在SNAP中的数据处理结束的时候才导出为其他数据格式。如果想在外部软件读取一个栅格，可以打开.data目录，里面有所有栅格的img格式和hdr头文件。</p>
-<p>如果想直接输出tif格式，可以修改配置参数，见下文。</p>
-<h2 id="自定义处理内容"><a href="#自定义处理内容" class="headerlink" title="自定义处理内容"></a>自定义处理内容</h2><p>通过修改配置参数，可以对处理过程进行自定义。</p>
-<p>（1）官方的一个示例，修改分辨率和重采样方法<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s1.ard_parameters[<span class="string">'single ARD'</span>][<span class="string">'resolution'</span>] = <span class="number">50</span></span><br><span class="line">s1.ard_parameters[<span class="string">'single ARD'</span>][<span class="string">'dem'</span>][<span class="string">'image resampling'</span>] = <span class="string">'BILINEAR_INTERPOLATION'</span></span><br></pre></td></tr></table></figure></p>
-<p>（2）由于OST默认不做to db，可以修改to db参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s1.ard_parameters[&apos;single_ARD&apos;][&apos;to_db&apos;] = True  # 要求转为db</span><br></pre></td></tr></table></figure></p>
-<p>不过遇到一个小问题：边框像元原本被设置为no data，加了分贝化参数后no data失效了。</p>
-<p>（3）只输出VV波段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s1.ard_parameters[&apos;single_ARD&apos;][&apos;polarisation&apos;] = &apos;VV&apos;</span><br></pre></td></tr></table></figure></p>
-<p>（4）将输出格式改为Geotiff<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s1.ard_parameters[&apos;single_ARD&apos;][&apos;to_tif&apos;] = True</span><br></pre></td></tr></table></figure></p>
-<p>报错了：TypeError: in method ‘wrapper_GDALWarpDestDS’, argument 1 of type ‘GDALDatasetShadow *’，懒得探究原因了，用GDAL自己转吧。</p>
-<h2 id="关于SAR数据的单位，gamma0与sigma0的区别"><a href="#关于SAR数据的单位，gamma0与sigma0的区别" class="headerlink" title="关于SAR数据的单位，gamma0与sigma0的区别"></a>关于SAR数据的单位，gamma0与sigma0的区别</h2><p>Earth-Engine的输单位出为sigma0, OST-GTC为gamma0</p>
-<p>待研究</p>
-
-          
+          Open SAR Toolkit(OST)是一个用于Sentinel-1数据预处理的Python包，支持Sentinel-1分析就绪数据(Analysis Ready Data, ARD)的自动生成。OST最初由联合国粮食及农业组织（FAO）开发，现在由ESA负责。
+安装依赖项安装配置SNAPSNA
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/09/28/Toolkit进行哨兵1号数据的自动化预处理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -548,46 +489,15 @@
       
         
           
-            <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>研一下学期开始接触QGIS，断断续续地做了两年多的QGIS开发。现在硕士毕业，以后可能就不怎么再做QGIS二次开发工作了。打算在博客里记录一些开发心得，希望后面的人能少踩一些坑。本文以64位Windows平台为例，分别介绍QGIS3.x在Visual Studio和Qt Creator平台下的二次开发环境配置。</p>
-<h3 id="2-准备工作"><a href="#2-准备工作" class="headerlink" title="2. 准备工作"></a>2. 准备工作</h3><p>受中文社区很多博客的影响，许多人，包括我自己在内，QGIS二次开发的起手式就是——编译源码。由于依赖库繁多，编译耗时而又容易出错，因此这是一项十分考验人品和耐性的工作。在编译工作上浪费了漫长的人生后才知道，<strong>编译源码并不是一个必需的工作</strong>。OSGeo4W已经为我们提供了QGIS二次开发所需的release版开发包。</p>
-<p>OSGeo4W是Windows平台下的多种开源GIS应用程序与开发库的安装工具，4W 即 <strong>for Windows</strong>。使用64位操作系统的用户可使用64位的OSGeo4W进行安装。安装时，选择”Advanced Install”，然后勾选 “qgis”或“qgis-ltr”即可下载安装对应版本的QGIS开发包。其中“qgis”指的是最新的发布版，“qgis-ltr”为长期发布（Long Term Release）版。目前（2019-06-12）OSGeo4W提供的qgis版本号为3.6，qgis-ltr版本号为3.4。OSGeo4W会自动安装GDAL等相关的依赖库。下图是我的QGIS开发库安装情况。</p>
-<p><img src="/images/osgeo4w.jpg" alt="osgeo4w"></p>
-<p>Qt5同样可以在OSGeo4W下载安装。WebKit模块在Qt5.6之后的官方版本中已被WebEngine模块取代，但QGIS布局项中的HTML渲染功能依然由WebKit模块实现。OSGeo4W提供的Qt则自带WebKit模块。目前OSGEO4W提供的Qt5版本号为5.11.2。</p>
-<h3 id="3-项目属性配置"><a href="#3-项目属性配置" class="headerlink" title="3. 项目属性配置"></a>3. 项目属性配置</h3><p>根据项目要求，可以自行选择Visual Studio或Qt Creator作为IDE，个人更喜欢Qt Creator，主要是Creator的快捷键用得更顺手。</p>
-<h4 id="3-1-Visual-Studio平台下配置"><a href="#3-1-Visual-Studio平台下配置" class="headerlink" title="3.1 Visual Studio平台下配置"></a>3.1 Visual Studio平台下配置</h4><p>新建Qt GUI应用程序，在项目向导里添加XML模块。生成解决方案后，将编译环境设为release x64，然后右键项目，选择“属性”，开始进行项目的属性配置。</p>
-<p>（1）添加包含目录。在“C++” &gt;&gt;“常规” &gt;&gt; “附加包含目录”中添加头文件路径：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C: \OSGeo4W64\include</span><br><span class="line">C: \OSGeo4W64\apps\qgis\include</span><br></pre></td></tr></table></figure>
-<p>（2）添加预处理器命令。在“C++” &gt;&gt;“预处理器” &gt;&gt; “预处理器定义”中添加以下预处理命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GUI_EXPORT=__declspec(dllimport)</span><br><span class="line">CORE_EXPORT=__declspec(dllimport)</span><br></pre></td></tr></table></figure>
-<p>（3）添加静态链接库目录。在“链接器” &gt;&gt;“常规” &gt;&gt; “附加库目录”中添加静态链接库路径：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\ OSGeo4W64\apps\qgis\lib</span><br><span class="line">C:\ OSGeo4W64 \lib</span><br></pre></td></tr></table></figure>
-<p>（4）添加依赖项。在“链接器” &gt;&gt;“输入” &gt;&gt; “附加依赖项”中添加以下项：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">qgis_core.lib</span><br><span class="line">qgis_gui.lib</span><br></pre></td></tr></table></figure>
-<h4 id="3-2-Qt-Creator平台下配置"><a href="#3-2-Qt-Creator平台下配置" class="headerlink" title="3.2 Qt Creator平台下配置"></a>3.2 Qt Creator平台下配置</h4><p>若使用Qt Creator作为开发所用IDE，可在pro文件中直接添加以下代码添加包含目录、库目录和预处理器命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">INCLUDEPATH += &quot;C:/OSGeo4W64/apps/qgis/include&quot;</span><br><span class="line">INCLUDEPATH += &quot;C:/OSGeo4W64/include&quot;</span><br><span class="line"></span><br><span class="line">LIBS += -L&quot;C:/OSGeo4W64/apps/qgis/lib&quot; -lqgis_core -lqgis_gui</span><br><span class="line">LIBS += -L&quot;C:/OSGeo4W64/lib&quot; -lgdal_i</span><br><span class="line"></span><br><span class="line">DEFINES += CORE_EXPORT=__declspec(dllimport)</span><br><span class="line">DEFINES += GUI_EXPORT=__declspec(dllimport)</span><br></pre></td></tr></table></figure>
-<h3 id="4-环境变量设置"><a href="#4-环境变量设置" class="headerlink" title="4. 环境变量设置"></a>4. 环境变量设置</h3><p>在IDE中配置好头文件目录、静态链接库目录和预处理器命令后，还需要将动态链接库目录设置到Windows的环境变量。动态链接库所在目录如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">C:\ OSGeo4W64\apps\qgis\bin</span><br><span class="line">C:\ OSGeo4W64\bin</span><br></pre></td></tr></table></figure>
-<p>如果不设置为环境变量，也可以直接将两个目录中的全部文件直接拷贝到应用程序可执行文件（.exe）的同级目录中。</p>
-<p>QGIS的投影支持依赖于GDAL，因此如果需要对不同坐标系的统一支持，需要将设置GDAL的环境变量，变量名需命名为“GDAL_DATA”。OSGeo4W会默认下载安装GDAL，路径如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\ OSGeo4W64\share\gdal</span><br></pre></td></tr></table></figure>
-<p>很多人使用<strong>QgsCoordinateReferenceSystem</strong>定义投影后发现无论是isValid()还是toProj4()测试，总是不能返回想要的值，两个不同坐标系的图层加载后完全不能兼容，就是因为没有添加GDAL的环境变量。</p>
-<h4 id="5-测试代码"><a href="#5-测试代码" class="headerlink" title="5. 测试代码"></a>5. 测试代码</h4><p>配置好项目属性后，如运行无错误，便可正式开始开发工作。我们的程序主窗体类名为MainWindow，头文件和源文件分别为mainwindow.h和mainwindow.cpp，下面以此为例，添加可以打开Shapefile矢量文件的QGIS代码。</p>
-<p>（1）将主函数文件main.cpp修改为如下内容：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mainwindow.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;qgsapplication.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QgsApplication <span class="title">a</span><span class="params">(argc, argv, <span class="literal">true</span>)</span></span>;</span><br><span class="line">    QgsApplication::setPrefixPath(<span class="string">"C:/OSGeo4W64/apps/qgis"</span>, <span class="literal">true</span>);</span><br><span class="line">    QgsApplication::initQgis();</span><br><span class="line">    MainWindow w;</span><br><span class="line">    w.show();</span><br><span class="line">    <span class="keyword">return</span> a.exec();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果运行成功，弹出一个啥都没有的小窗体，那你可以大舒一口气了，胜利曙光就在眼前。但如果运行失败，尤其是Qt Creator，就告诉你一个crashed，啥报错没有，那就头大了。先重启一下IDE，因为可能是环境变量还没生效，还不行就重启一下电脑。再不行的话，重新下载OSGeo4W中的库，或者——跪下求求他吧。</p>
-<p><img src="/images/祈求.jpg" alt="祈求"></p>
-<p>我曾经遇见过最玄学的问题是，上一个demo成功运行，下一个demo完全一样的代码就crash了。最后把第二个demo的Qt从官网下载安装的5.12换成OSGeo4w下载的5.11，终得解决。</p>
-<p>（2）在主窗体的UI文件mainwindow.ui添加一个新的action，命名为actionAddVectorLayer。</p>
-<p>（3）修改主窗体头文件mainwindow.h，添加地图画布对象与加载矢量图层的槽函数的声明。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> MAINWINDOW_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAINWINDOW_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QMainWindow&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"ui_mainwindow.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QgsMapCanvas</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MainWindow</span> :</span> <span class="keyword">public</span> QMainWindow, <span class="keyword">private</span> Ui::MainWindow</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    MainWindow(QWidget *parent = <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> slots:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addVectorLayer</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    QgsMapCanvas *canvas;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// MAINWINDOW_H</span></span></span><br></pre></td></tr></table></figure>
-<p>其中，地图画布类QgsMapCanvas 用于所有支持的GIS数据与其他地图项目的显示，支持地图与平移、缩放等地图工具的交互。</p>
-<p>（4）修改主窗体的源文件，设计地图画布对象，添加槽函数定义。</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"mainwindow.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QFileDialog&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QMessageBox&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;qgsmapcanvas.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;qgsvectorlayer.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;qgsproject.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">MainWindow::MainWindow(QWidget *parent)</span><br><span class="line">    : QMainWindow(parent)</span><br><span class="line">&#123;</span><br><span class="line">    setupUi(<span class="keyword">this</span>);</span><br><span class="line">    canvas = <span class="keyword">new</span> QgsMapCanvas();</span><br><span class="line">    canvas-&gt;enableAntiAliasing(<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">this</span>-&gt;setCentralWidget(canvas);</span><br><span class="line">    connect(actionAddVectorLayer, &amp;QAction::triggered, <span class="keyword">this</span>, &amp;MainWindow::addVectorLayer);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> MainWindow:: addVectorLayer()</span><br><span class="line">&#123;</span><br><span class="line">    QString path = QFileDialog::getOpenFileName(<span class="keyword">this</span>, tr(<span class="string">"Open Vector File"</span>), QString(), <span class="string">"ESRI Shapefile(*.shp)"</span>);</span><br><span class="line">    <span class="keyword">if</span> (path.isEmpty())</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    QString baseName = QFileInfo(path).completeBaseName();</span><br><span class="line">    QgsVectorLayer *layer = <span class="keyword">new</span> QgsVectorLayer(path, baseName, <span class="string">"ogr"</span>);</span><br><span class="line">    <span class="keyword">if</span> (!layer-&gt;isValid())</span><br><span class="line">    &#123;</span><br><span class="line">        QMessageBox::critical(<span class="keyword">this</span>, tr(<span class="string">"Error"</span>), tr(<span class="string">"Open file failed!"</span>));</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    QList&lt;QgsMapLayer *&gt; myList;</span><br><span class="line">    myList &lt;&lt; layer;</span><br><span class="line">    QgsProject::instance()-&gt;addMapLayers( myList );</span><br><span class="line"></span><br><span class="line">    canvas-&gt;zoomToFullExtent();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>测试代码编写完毕，运行程序，如果可以正确加载Shapefile矢量数据，至此便完成了QGIS 3.x二次开发环境的配置。有时可能代码顺利运行，但地图画布上却只是白茫茫一片不显示任何数据，别担心，试用一下这个代码：</p>
-<p><a href="https://github.com/fangzhegeo/qgis_demo" target="_blank" rel="noopener">https://github.com/fangzhegeo/qgis_demo</a></p>
-<p>这是一个更加完整的测试代码，我在里面添加了图层树控件，应该不会再有不显示数据的问题。</p>
-
-          
+          1. 前言研一下学期开始接触QGIS，断断续续地做了两年多的QGIS开发。现在硕士毕业，以后可能就不怎么再做QGIS二次开发工作了。打算在博客里记录一些开发心得，希望后面的人能少踩一些坑。本文以64位Windows平台为例，分别介绍QGIS3.x在Visual Studio和Qt Creator平台
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/06/12/QGIS-3-x-二次开发：Windows平台开发环境配置/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -715,26 +625,33 @@
       
         
           
-            <p>第一篇文章，记录几个hexo的命令</p>
-<p>首先将路径切换到博客目录</p>
-<p><strong>新建文章</strong> </p>
-<blockquote>
-<p>hexo n “文章名” </p>
-</blockquote>
-<p><strong>生成</strong></p>
-<blockquote>
-<p>hexo g   </p>
-</blockquote>
-<p><strong>启动服务预览</strong></p>
-<blockquote>
-<p>hexo s </p>
-</blockquote>
-<p><strong>部署</strong></p>
-<blockquote>
-<p>hexo d</p>
-</blockquote>
+          第一篇文章，记录几个hexo的命令
+首先将路径切换到博客目录
+新建文章 
+
+hexo n “文章名” 
+
+生成
+
+hexo g   
+
+启动服务预览
+
+hexo s 
+
+部署
+
+hexo d
+
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/04/23/首篇文章测试/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
