@@ -89,11 +89,11 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/Sentinel-1_GTC.jpg">
 <meta property="og:image" content="http://yoursite.com/images/Sentinel-1_RTC.jpg">
-<meta property="og:image" content="e:/blog/source/images/Sentinel1_speckle_filter_no.png">
-<meta property="og:image" content="e:/blog/source/images/Sentinel1_speckle_filter_yes.png">
+<meta property="og:image" content="http://yoursite.com/images/Sentinel1_speckle_filter_no.png">
+<meta property="og:image" content="http://yoursite.com/images/Sentinel1_speckle_filter_yes.png">
 <meta property="og:image" content="http://yoursite.com/images/水体-不执行斑点滤波.png">
 <meta property="og:image" content="http://yoursite.com/images/水体-执行斑点滤波.png">
-<meta property="og:updated_time" content="2020-10-04T14:18:59.592Z">
+<meta property="og:updated_time" content="2020-10-04T14:22:27.696Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Open SAR Toolkit进行哨兵1号数据的自动化预处理">
 <meta name="twitter:description" content="Open SAR Toolkit(OST)是一个用于Sentinel-1数据预处理的Python包，支持Sentinel-1分析就绪数据(Analysis Ready Data, ARD)的自动生成。OST最初由联合国粮食及农业组织（FAO）开发，现在由ESA负责。 安装依赖项安装配置SNAPSNAP是OST的依赖软件。首先在此处下载安装包并安装SNAP。 配置SNAP python环境（可选）S">
@@ -440,8 +440,8 @@
 <p>（3）只输出VV波段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s1.ard_parameters[&apos;single_ARD&apos;][&apos;polarisation&apos;] = &apos;VV&apos;</span><br></pre></td></tr></table></figure></p>
 <p>（4）将输出格式改为Geotiff<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s1.ard_parameters[&apos;single_ARD&apos;][&apos;to_tif&apos;] = True</span><br></pre></td></tr></table></figure></p>
 <p>报错了：TypeError: in method ‘wrapper_GDALWarpDestDS’, argument 1 of type ‘GDALDatasetShadow *’，懒得探究原因了，用GDAL自己转吧。</p>
-<h2 id="斑点噪声滤波的效果"><a href="#斑点噪声滤波的效果" class="headerlink" title="斑点噪声滤波的效果"></a>斑点噪声滤波的效果</h2><p>先看一下数据处理的效果：上图是没做滤波，下图做了滤波。<br><img src="E:/blog/source/images/Sentinel1_speckle_filter_no.png" alt="Sentinel1_no_speckle_filter"></p>
-<p><img src="E:/blog/source/images/Sentinel1_speckle_filter_yes.png" alt="Sentinel1_with_speckle_filter"></p>
+<h2 id="斑点噪声滤波的效果"><a href="#斑点噪声滤波的效果" class="headerlink" title="斑点噪声滤波的效果"></a>斑点噪声滤波的效果</h2><p>先看一下数据处理的效果：上图是没做滤波，下图做了滤波。<br><img src="/images/Sentinel1_speckle_filter_no.png" alt="Sentinel1_no_speckle_filter"></p>
+<p><img src="/images/Sentinel1_speckle_filter_yes.png" alt="Sentinel1_with_speckle_filter"></p>
 <p>（需要放大才能看清），不做滤波的话，建筑的边界还是比较明显的，做了滤波之后就没有那么明显了。</p>
 <p>来看一下水体提取的效果。使用经典的Otsu阈值分割算法提取水体，上图是没有做滤波的，下图是做了滤波的。</p>
 <p><img src="/images/水体-不执行斑点滤波.png" alt="water_no_speckle_filter"></p>
